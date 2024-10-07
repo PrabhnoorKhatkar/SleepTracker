@@ -1,5 +1,6 @@
 package edu.sjsu.android.sleeptracker;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -35,9 +36,20 @@ public class SensorForegroundService extends Service implements SensorEventListe
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 
+        createNotificationChannel();
+        //startForeground(1, getNotification());
+
 
     }
 
+    private void createNotificationChannel() {
+
+    }
+
+    private Notification getNotification() {
+
+        return null;
+    }
 
     @Override
     public void onDestroy() {
@@ -64,6 +76,8 @@ public class SensorForegroundService extends Service implements SensorEventListe
 
             SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
             //TODO Add sleepData to Database
+
+
 
 
         }
