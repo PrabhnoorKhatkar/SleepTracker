@@ -9,6 +9,9 @@ activity = "1.9.2"
 constraintlayout = "2.1.4"
 roomCommon = "2.6.1"
 firebaseCommon = "21.0.0"
+roomRuntimeAndroid = "2.7.0-alpha09"
+roomRuntime = "2.6.1"
+roomCompiler = "2.6.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -20,6 +23,9 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 firebase-common = { group = "com.google.firebase", name = "firebase-common", version.ref = "firebaseCommon" }
+room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
