@@ -1,6 +1,9 @@
 package edu.sjsu.android.sleeptracker;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +12,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.BatteryManager;
+import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
-import com.google.firebase.Timestamp;
 
 public class SensorForegroundService extends Service implements SensorEventListener
 {
@@ -21,6 +26,8 @@ public class SensorForegroundService extends Service implements SensorEventListe
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private BatteryManager batteryManager;
+    private Handler handler;
+
 
     @Override
     public void onCreate()
@@ -36,32 +43,37 @@ public class SensorForegroundService extends Service implements SensorEventListe
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 
-        createNotificationChannel();
-        //startForeground(1, getNotification());
-
-
     }
 
     private void createNotificationChannel() {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    "SensorForegroundServiceChannel",
+                    "Sensor Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
+
 
     private Notification getNotification() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        return null;
+        return new NotificationCompat.Builder(this, "SensorForegroundServiceChannel")
+                .setContentTitle("Sleep Tracker Running")
+                .setContentText("Measuring Sleep")
+                .setContentIntent(pendingIntent)
+                .build();
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
-    }
-
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     @Override
@@ -74,7 +86,7 @@ public class SensorForegroundService extends Service implements SensorEventListe
             // Get the battery status
             int batteryStatus = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
 
-            SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
+            //SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
             //TODO Add sleepData to Database
 
 
@@ -85,8 +97,17 @@ public class SensorForegroundService extends Service implements SensorEventListe
 
     }
 
+
+
+    // Unused Methods
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-    // Unused
     }
 }
