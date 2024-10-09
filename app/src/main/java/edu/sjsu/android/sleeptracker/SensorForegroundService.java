@@ -15,6 +15,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -27,6 +28,8 @@ public class SensorForegroundService extends Service implements SensorEventListe
     private Sensor lightSensor;
     private BatteryManager batteryManager;
     private Handler handler;
+    private long lastLoggedTime = 0;
+    private long logInterval = 300000; // 5 Minutes = 300000milliseconds
 
 
     @Override
@@ -86,17 +89,18 @@ public class SensorForegroundService extends Service implements SensorEventListe
             // Get the battery status
             int batteryStatus = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
 
-            //SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
-            //TODO Add sleepData to Database
+            // Debounce sensor readings - only log/store data every 5 minutes
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastLoggedTime >= logInterval) {
+                lastLoggedTime = currentTime;
+                Log.d("SensorDataService", "Lux Value: " + luxValue);
 
-
-
+                //SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
+                //TODO Add sleepData to Database
+            }
 
         }
-
-
     }
-
 
 
     // Unused Methods
