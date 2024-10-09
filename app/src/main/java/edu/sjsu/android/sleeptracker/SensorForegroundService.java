@@ -12,13 +12,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import java.sql.Timestamp;
 
 
 public class SensorForegroundService extends Service implements SensorEventListener
@@ -27,9 +27,9 @@ public class SensorForegroundService extends Service implements SensorEventListe
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private BatteryManager batteryManager;
-    private Handler handler;
+    private SleepDatabase sleepDB;
     private long lastLoggedTime = 0;
-    private long logInterval = 300000; // 5 Minutes = 300000milliseconds
+    private final long  logInterval = 300000; // 5 Minutes = 300000 milliseconds
 
 
     @Override
@@ -45,19 +45,24 @@ public class SensorForegroundService extends Service implements SensorEventListe
         // Register listener to get sensor values
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
+        // Get Singleton Database connection
+        sleepDB = SleepDatabase.getInstance(getApplicationContext());
+
+        createNotificationChannel();
+        Notification notification = getNotification();
+        startForeground(1, notification);
 
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    "SensorForegroundServiceChannel",
-                    "Sensor Foreground Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
-        }
+    private void createNotificationChannel()
+    {
+        NotificationChannel serviceChannel = new NotificationChannel(
+                "SensorForegroundServiceChannel",
+                "Sensor Foreground Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(serviceChannel);
     }
 
 
@@ -89,14 +94,15 @@ public class SensorForegroundService extends Service implements SensorEventListe
             // Get the battery status
             int batteryStatus = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
 
-            // Debounce sensor readings - only log/store data every 5 minutes
+            // Only store data every 5 minutes
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastLoggedTime >= logInterval) {
                 lastLoggedTime = currentTime;
                 Log.d("SensorDataService", "Lux Value: " + luxValue);
 
-                //SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
-                //TODO Add sleepData to Database
+                SleepData sleepData = new SleepData(new Timestamp(System.currentTimeMillis()), luxValue, batteryStatus);
+                sleepDB.sleepDataDAO().addData(sleepData);
+
             }
 
         }

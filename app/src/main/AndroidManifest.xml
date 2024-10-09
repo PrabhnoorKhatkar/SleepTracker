@@ -29,8 +29,10 @@
         </activity>
 
         <service
-            android:name="SensorForegroundService"
-        />
+            android:name=".SensorForegroundService"
+            android:foregroundServiceType="shortService"
+            />
+
 
     </application>
 

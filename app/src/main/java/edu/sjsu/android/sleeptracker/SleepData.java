@@ -3,6 +3,7 @@ package edu.sjsu.android.sleeptracker;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.sql.Timestamp;
 
@@ -12,7 +13,9 @@ public class SleepData {
     @PrimaryKey(autoGenerate = true)
     private int eventID;
 
+
     @ColumnInfo(name = "Time")
+    @TypeConverters({Converters.class})
     private Timestamp timestamp;
 
     @ColumnInfo(name = "Lux")
