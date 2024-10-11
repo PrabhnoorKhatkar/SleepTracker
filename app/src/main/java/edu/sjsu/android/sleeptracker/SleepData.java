@@ -15,7 +15,6 @@ public class SleepData {
 
 
     @ColumnInfo(name = "Time")
-    @TypeConverters({Converters.class})
     private Timestamp timestamp;
 
     @ColumnInfo(name = "Lux")
@@ -33,6 +32,15 @@ public class SleepData {
         this.lux = lux;
         this.chargeState = chargeState;
     }
+
+    public int getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
+    }
+
 
     public Timestamp getTimestamp() {
         return timestamp;
