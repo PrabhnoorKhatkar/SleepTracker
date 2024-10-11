@@ -21,7 +21,7 @@ public abstract class SleepDatabase extends RoomDatabase {
             synchronized (SleepDatabase.class)
             {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepDatabase.class, "sleep_database").build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepDatabase.class, "SleepDB").build();
                 }
             }
         }
