@@ -107,9 +107,6 @@ public class SensorForegroundService extends Service implements SensorEventListe
                 new Thread(() -> {
                     sleepDB.sleepDataDAO().addData(sleepData);
                     Log.d("SensorDataService", "Lux value stored in the database: " + luxValue);
-
-                    sleepDB.closeDatabase();
-
                 }).start();
             }
 
