@@ -36,20 +36,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         sleepDB = SleepDatabase.getInstance(getApplicationContext());
-        sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
+
 
         // THIS LINE BREAKS CODE
         // Retrieve sleep data
-        List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
+        try {
+            List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
+            processSleepData(sleepDataList);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+        }
 
-        /*
-
-        processSleepData(sleepDataList);
-        */
 
     }
 
     private void processSleepData(List<SleepData> sleepDataList) {
+        sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
         boolean isCurrentlySleeping = false;
         Timestamp sleepStartTime = null;
 
@@ -65,9 +67,17 @@ public class MainActivity extends AppCompatActivity {
                 isCurrentlySleeping = false;
                 Timestamp sleepEndTime = currentData.getTimestamp(); // Mark sleep end time
                 SleepPeriod sleepPeriod = new SleepPeriod(sleepStartTime, timestampToLong(sleepEndTime) - timestampToLong(sleepStartTime), sleepStartTime, sleepEndTime);
-                sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
+
+                new Thread(() -> {
+                    try {
+                        sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
+                    } catch (Exception e) {
+                        e.printStackTrace(); // Log the exception for debugging
+                    }
+                }).start();
             }
         }
+        sleepPeriodDB.closeDatabase();
     }
 }
 
