@@ -3,16 +3,13 @@ package edu.sjsu.android.sleeptracker;
 import static edu.sjsu.android.sleeptracker.Converters.timestampToLong;
 
 import android.content.Context;
-import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
-import java.sql.Timestamp;
-
-import androidx.activity.EdgeToEdge;
+import android.widget.Button;
+import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import java.sql.Timestamp;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,21 +19,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        Button saveButton = findViewById(R.id.Save);
+        saveButton.setOnClickListener(v -> {
+            saveSleepData();
         });
 
+        Button dataButton = findViewById(R.id.data_button);
+        dataButton.setOnClickListener(v -> {
+            Intent dataIntent = new Intent(MainActivity.this, DataActivity.class);
+            startActivity(dataIntent);
+        });
+    }
 
-        Intent serviceIntent = new Intent(this, SensorForegroundService.class);
-        startForegroundService(serviceIntent);
-
-
+    private void saveSleepData() {
         sleepDB = SleepDatabase.getInstance(getApplicationContext());
-
 
         // THIS LINE BREAKS CODE
         // Retrieve sleep data
@@ -44,10 +42,8 @@ public class MainActivity extends AppCompatActivity {
             List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
             processSleepData(sleepDataList);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the exception for debugging
+            e.printStackTrace();
         }
-
-
     }
 
     private void processSleepData(List<SleepData> sleepDataList) {
@@ -66,13 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 // End of a sleep period
                 isCurrentlySleeping = false;
                 Timestamp sleepEndTime = currentData.getTimestamp(); // Mark sleep end time
-                SleepPeriod sleepPeriod = new SleepPeriod(sleepStartTime, timestampToLong(sleepEndTime) - timestampToLong(sleepStartTime), sleepStartTime, sleepEndTime);
+                SleepPeriod sleepPeriod = new SleepPeriod(sleepStartTime,
+                        timestampToLong(sleepEndTime) - timestampToLong(sleepStartTime), sleepStartTime, sleepEndTime);
 
                 new Thread(() -> {
                     try {
                         sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
                     } catch (Exception e) {
-                        e.printStackTrace(); // Log the exception for debugging
+                        e.printStackTrace();
                     }
                 }).start();
             }
@@ -80,8 +77,3 @@ public class MainActivity extends AppCompatActivity {
         sleepPeriodDB.closeDatabase();
     }
 }
-
-
-
-
-

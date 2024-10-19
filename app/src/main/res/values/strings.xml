@@ -1,3 +1,28 @@
 <resources>
+    <!-- App name -->
     <string name="app_name">SleepTracker</string>
+
+    <!-- Button texts -->
+    <string name="home_button_text">Home</string>
+    <string name="data_button_text">Data</string>
+    <string name="save_button_text">Save</string>
+    <string name="prev_week_button_text">&lt; Prev Week</string>
+    <string name="next_week_button_text">Next Week &gt;</string>
+
+    <!-- Labels -->
+    <string name="average_weekly_label">Average Weekly: </string>
+    <string name="average_overall_label">Average Sleep Time Overall: </string>
+    <string name="sleep_duration_label">Sleep Duration (Hours)</string>
+    <string name="week_label">WEEK</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">Sleep Tracker Running</string>
+    <string name="notification_content">Measuring Sleep</string>
+
+    <!-- Error messages -->
+    <string name="error_retrieving_data">Error retrieving data</string>
+
+    <!-- Miscellaneous -->
+    <string name="start_sleep">Start Sleep</string>
+    <string name="end_sleep">End Sleep</string>
 </resources>
