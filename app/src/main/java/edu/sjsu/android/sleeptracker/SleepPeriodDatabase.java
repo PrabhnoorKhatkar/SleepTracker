@@ -1,5 +1,6 @@
 package edu.sjsu.android.sleeptracker;
 
+
 import android.content.Context;
 
 import androidx.room.Database;
@@ -7,20 +8,20 @@ import androidx.room.RoomDatabase;
 import androidx.room.Room;
 import androidx.room.TypeConverters;
 
-@Database(entities = {SleepData.class}, version = 1)
+@Database(entities = {SleepPeriod.class}, version = 1)
 @TypeConverters({Converters.class})
-public abstract class SleepDatabase extends RoomDatabase {
+public abstract class SleepPeriodDatabase extends RoomDatabase {
 
-    public abstract SleepDataDAO sleepDataDAO();
-    private static volatile SleepDatabase INSTANCE;
+    public abstract SleepPeriodDAO sleepPeriodDAO();
+    private static volatile SleepPeriodDatabase INSTANCE;
 
 
-    public static SleepDatabase getInstance(Context context) {
+    public static SleepPeriodDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (SleepDatabase.class)
             {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepDatabase.class, "SleepDB").build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepPeriodDatabase.class, "SleepPeriodDB").build();
                 }
             }
         }

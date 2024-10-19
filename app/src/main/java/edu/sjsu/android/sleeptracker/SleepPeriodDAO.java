@@ -20,6 +20,6 @@ public interface SleepPeriodDAO {
     @Delete
     public void deleteData(SleepPeriod data);
 
-    @Query("SELECT * FROM SleepData")
+    @Query("SELECT * FROM SleepPeriod")
     List<SleepPeriod> getAllSleepPeriodData();
 }

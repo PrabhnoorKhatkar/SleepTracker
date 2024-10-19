@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.sql.Timestamp;
 
-@Entity(tableName = "sleepPeriod")
+@Entity(tableName = "SleepPeriod")
 public class SleepPeriod
 {
     @PrimaryKey(autoGenerate = true)
@@ -25,14 +25,19 @@ public class SleepPeriod
     private Timestamp endTime;
 
 
-    public SleepPeriod() {
-    }
-
     public SleepPeriod(Timestamp date, float duration, Timestamp startTime, Timestamp endTime) {
         this.date = date;
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public int getSleepID() {
+        return SleepID;
+    }
+
+    public void setSleepID(int sleepID) {
+        SleepID = sleepID;
     }
 
     public Timestamp getDate() {

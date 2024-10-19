@@ -52,6 +52,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TimePicker
+                        android:id="@+id/datePicker1"
+                        android:layout_width="215dp"
+                        android:layout_height="115dp"
+                        android:layout_marginStart="54dp"
+                        android:layout_marginTop="5dp"
+                        android:timePickerMode="spinner"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                    <TimePicker
+                        android:id="@+id/datePicker2"
+                        android:layout_width="215dp"
+                        android:layout_height="115dp"
+                        android:layout_marginStart="54dp"
+                        android:layout_marginTop="21dp"
+                        android:timePickerMode="spinner"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/datePicker1"
+                        tools:ignore="MissingConstraints" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </FrameLayout>
 
             <Button

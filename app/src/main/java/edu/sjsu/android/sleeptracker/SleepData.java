@@ -13,7 +13,6 @@ public class SleepData {
     @PrimaryKey(autoGenerate = true)
     private int eventID;
 
-
     @ColumnInfo(name = "Time")
     private Timestamp timestamp;
 
@@ -64,5 +63,9 @@ public class SleepData {
 
     public void setChargeState(int chargeState) {
         this.chargeState = chargeState;
+    }
+
+    public boolean isCharging() {
+        return chargeState == 4;
     }
 }
