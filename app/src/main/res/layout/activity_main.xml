@@ -12,9 +12,13 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="279dp"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <include
             android:id="@+id/custom_actionbar"
@@ -24,6 +28,7 @@
 
 
     <FrameLayout
+        android:id="@+id/frameLayout2"
         android:layout_width="360dp"
         android:layout_height="360dp"
         android:layout_marginStart="25dp"
@@ -62,21 +67,27 @@
                         android:layout_height="115dp"
                         android:layout_marginStart="54dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginEnd="55dp"
+                        android:layout_marginBottom="5dp"
                         android:timePickerMode="spinner"
+                        app:layout_constraintBottom_toTopOf="@+id/datePicker2"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TimePicker
                         android:id="@+id/datePicker2"
                         android:layout_width="215dp"
                         android:layout_height="115dp"
                         android:layout_marginStart="54dp"
-                        android:layout_marginTop="21dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="55dp"
+                        android:layout_marginBottom="5dp"
                         android:timePickerMode="spinner"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/datePicker1"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toBottomOf="@+id/datePicker1" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,7 +102,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="135dp"
                 android:layout_marginBottom="16dp"
-                android:text="Save"
+                android:text="@string/save"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
