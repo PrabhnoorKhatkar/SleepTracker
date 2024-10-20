@@ -19,8 +19,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Custom BarChartView to display sleep data -->
-    <edu.sjsu.android.sleeptracker.BarChartView
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/bar_chart_view"
         android:layout_width="0dp"
         android:layout_height="300dp"
@@ -29,7 +28,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
     <TextView
         android:id="@+id/average_weekly"
         android:layout_width="wrap_content"

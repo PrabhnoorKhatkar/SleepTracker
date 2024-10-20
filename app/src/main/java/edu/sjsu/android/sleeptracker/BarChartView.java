@@ -15,7 +15,7 @@ public class BarChartView extends SurfaceView implements SurfaceHolder.Callback,
     private Thread drawThread;
     private SurfaceHolder surfaceHolder;
     private boolean isDrawing;
-    private List<Integer> data;
+    private List<Float> data;
 
     public BarChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -73,9 +73,9 @@ public class BarChartView extends SurfaceView implements SurfaceHolder.Callback,
         int maxHeight = chartHeight - 100;
 
         for (int i = 0; i < data.size(); i++) {
-            int barHeight = (data.get(i) * maxHeight) / 200;
+            float barHeight = (data.get(i) * maxHeight) / 200;
             int left = i * barWidth;
-            int top = chartHeight - barHeight;
+            float top = chartHeight - barHeight;
             int right = left + barWidth - 20;
             int bottom = chartHeight;
 
@@ -85,7 +85,7 @@ public class BarChartView extends SurfaceView implements SurfaceHolder.Callback,
         }
     }
 
-    public void setData(List<Integer> newData) {
+    public void setData(List<Float> newData) {
         this.data = newData;
         invalidate();
     }

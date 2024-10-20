@@ -3,13 +3,17 @@ package edu.sjsu.android.sleeptracker;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataActivity extends AppCompatActivity {
 
     private SleepPeriodDatabase sleepPeriodDB;
-    private BarChartView barChartView;
+    private BarChart barChart;
     private TextView avgWeeklyText, avgOverallText;
 
     @Override
@@ -17,7 +21,7 @@ public class DataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
 
-        barChartView = findViewById(R.id.bar_chart_view);
+        barChart = findViewById(R.id.bar_chart_view);
         avgWeeklyText = findViewById(R.id.average_weekly);
         avgOverallText = findViewById(R.id.average_overall);
 
@@ -28,23 +32,29 @@ public class DataActivity extends AppCompatActivity {
     }
 
     private void displayData(List<SleepPeriod> sleepPeriods) {
-
         float totalSleep = 0;
         int sleepCount = sleepPeriods.size();
-        List<Integer> sleepDurations = new ArrayList<>();
+        List<BarEntry> barEntries = new ArrayList<>();
 
+        // Loop through the sleep periods and collect durations
         for (int i = 0; i < sleepCount; i++) {
             SleepPeriod period = sleepPeriods.get(i);
-            totalSleep += period.getDuration();
-            sleepDurations.add((int) period.getDuration());
+            float duration = period.getDuration();
+            totalSleep += duration;
+            barEntries.add(new BarEntry(i, duration));
         }
 
         float avgWeekly = totalSleep / 7;
         float avgOverall = totalSleep / sleepCount;
 
+        // Update TextViews with the calculated averages
         avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
         avgOverallText.setText("Average Overall: " + avgOverall + " hours");
 
-        barChartView.setData(sleepDurations);
+        // Create BarDataSet and BarData for the chart
+        BarDataSet dataSet = new BarDataSet(barEntries, "Sleep Duration (Hours)");
+        BarData barData = new BarData(dataSet);
+        barChart.setData(barData);
+        barChart.invalidate();
     }
 }
