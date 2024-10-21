@@ -11,6 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.Timestamp;
 
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+
 public class MainActivity extends AppCompatActivity {
 
     private SleepDatabase sleepDB;
@@ -19,28 +25,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        Button saveButton = findViewById(R.id.Save);
-        saveButton.setOnClickListener(v -> {
-            saveSleepData();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
+
+
+        Intent serviceIntent = new Intent(this, SensorForegroundService.class);
+        startForegroundService(serviceIntent);
+
+        saveSleepData();
 
         Button dataButton = findViewById(R.id.data_button);
         dataButton.setOnClickListener(v -> {
             Intent dataIntent = new Intent(MainActivity.this, DataActivity.class);
             startActivity(dataIntent);
         });
+
+
+
     }
 
     private void saveSleepData() {
         sleepDB = SleepDatabase.getInstance(getApplicationContext());
 
-        // THIS LINE BREAKS CODE
         // Retrieve sleep data
         try {
-            List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
-            processSleepData(sleepDataList);
+
+            new Thread(() -> {
+                try {
+                    List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
+                    processSleepData(sleepDataList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

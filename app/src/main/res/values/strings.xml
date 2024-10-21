@@ -25,4 +25,5 @@
     <!-- Miscellaneous -->
     <string name="start_sleep">Start Sleep</string>
     <string name="end_sleep">End Sleep</string>
+    <string name="save">Save</string>
 </resources>
