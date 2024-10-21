@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.Room;
 import androidx.room.TypeConverters;
 
-@Database(entities = {SleepPeriod.class}, version = 1)
+@Database(entities = {SleepPeriod.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class SleepPeriodDatabase extends RoomDatabase {
 
