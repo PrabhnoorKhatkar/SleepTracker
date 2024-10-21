@@ -9,6 +9,8 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DataActivity extends AppCompatActivity {
 
@@ -26,9 +28,16 @@ public class DataActivity extends AppCompatActivity {
         avgOverallText = findViewById(R.id.average_overall);
 
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
-        List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodData();
 
-        displayData(sleepPeriods);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+
+            List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodData();
+
+            runOnUiThread(() -> {
+                displayData(sleepPeriods);
+            });
+        });
     }
 
     private void displayData(List<SleepPeriod> sleepPeriods) {
@@ -36,14 +45,12 @@ public class DataActivity extends AppCompatActivity {
         int sleepCount = sleepPeriods.size();
         List<BarEntry> barEntries = new ArrayList<>();
 
-        // Loop through the sleep periods and collect durations
         for (int i = 0; i < sleepCount; i++) {
             SleepPeriod period = sleepPeriods.get(i);
             float duration = period.getDuration();
             totalSleep += duration;
             barEntries.add(new BarEntry(i, duration));
         }
-
         float avgWeekly = totalSleep / 7;
         float avgOverall = totalSleep / sleepCount;
 
@@ -51,7 +58,6 @@ public class DataActivity extends AppCompatActivity {
         avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
         avgOverallText.setText("Average Overall: " + avgOverall + " hours");
 
-        // Create BarDataSet and BarData for the chart
         BarDataSet dataSet = new BarDataSet(barEntries, "Sleep Duration (Hours)");
         BarData barData = new BarData(dataSet);
         barChart.setData(barData);
