@@ -2,10 +2,13 @@ package edu.sjsu.android.sleeptracker;
 
 import static edu.sjsu.android.sleeptracker.Converters.timestampToLong;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.TimePicker;
+
+import java.util.Date;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, SensorForegroundService.class);
         startForegroundService(serviceIntent);
 
-        saveSleepData();
+        initTimePicker();
 
         Button dataButton = findViewById(R.id.data_button);
         dataButton.setOnClickListener(v -> {
@@ -45,7 +48,61 @@ public class MainActivity extends AppCompatActivity {
             startActivity(dataIntent);
         });
 
+    }
 
+    private void initTimePicker()
+    {
+        saveSleepData();
+        sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
+        TimePicker startTimePicker = findViewById(R.id.datePicker1);
+        TimePicker endTimePicker = findViewById(R.id.datePicker2);
+
+        new Thread(() -> {
+            try {
+                long last24Hours = System.currentTimeMillis() - 86400000;
+                SleepPeriod mostRecentSleepPeriod = sleepPeriodDB.sleepPeriodDAO().getMostRecentSleepPeriod(last24Hours);
+
+                if (mostRecentSleepPeriod != null)
+                {
+                    // Extract start and end time
+                    Timestamp startTime = mostRecentSleepPeriod.getStartTime();
+                    Timestamp endTime = mostRecentSleepPeriod.getEndTime();
+
+                    // Convert Timestamp to Date
+                    Date startDate = new Date(startTime.getTime());
+                    Date endDate = new Date(endTime.getTime());
+
+                    // Extract hours and minutes from Date
+                    int startHour = startDate.getHours();
+                    int startMinute = startDate.getMinutes();
+
+                    int endHour = endDate.getHours();
+                    int endMinute = endDate.getMinutes();
+
+
+                    new Thread(() -> {
+                        try
+                        {
+                            // Set the time on the time pickers
+                            startTimePicker.setHour(startHour);
+                            startTimePicker.setMinute(startMinute);
+                            endTimePicker.setHour(endHour);
+                            endTimePicker.setMinute(endMinute);
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+
+                }
+                else
+                {
+                    Log.d("HI", "NO SLEEP DATA FOUND LAST 24 HOURS");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 
@@ -54,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Retrieve sleep data
         try {
-
             new Thread(() -> {
                 try {
                     List<SleepData> sleepDataList = sleepDB.sleepDataDAO().getAllSleepData();
@@ -86,8 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 // End of a sleep period
                 isCurrentlySleeping = false;
                 Timestamp sleepEndTime = currentData.getTimestamp(); // Mark sleep end time
-                SleepPeriod sleepPeriod = new SleepPeriod(sleepStartTime,
-                        timestampToLong(sleepEndTime) - timestampToLong(sleepStartTime), sleepStartTime, sleepEndTime);
+                SleepPeriod sleepPeriod = new SleepPeriod(sleepStartTime, timestampToLong(sleepEndTime) - timestampToLong(sleepStartTime), sleepStartTime, sleepEndTime);
 
                 new Thread(() -> {
                     try {

@@ -9,7 +9,8 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface SleepPeriodDAO {
+public interface SleepPeriodDAO
+{
 
     @Insert
     public void addData(SleepPeriod data);
@@ -22,4 +23,8 @@ public interface SleepPeriodDAO {
 
     @Query("SELECT * FROM SleepPeriod")
     List<SleepPeriod> getAllSleepPeriodData();
+
+    @Query("SELECT * FROM SleepPeriod WHERE startTime >= :last24Hours ORDER BY startTime DESC LIMIT 1")
+    SleepPeriod getMostRecentSleepPeriod(long last24Hours);
+
 }
