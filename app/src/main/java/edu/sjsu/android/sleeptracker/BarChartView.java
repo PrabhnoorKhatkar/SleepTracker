@@ -59,7 +59,6 @@ public class BarChartView extends SurfaceView implements SurfaceHolder.Callback,
     private void drawChart(Canvas canvas) {
         if (data == null || data.isEmpty()) return;
 
-        // Set up background and bar colors
         canvas.drawColor(Color.WHITE);
         Paint barPaint = new Paint();
         barPaint.setColor(Color.BLUE);

@@ -35,26 +35,27 @@ public class DataActivity extends AppCompatActivity {
         avgOverallText = findViewById(R.id.average_overall);
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
 
+        long startOfWeek = System.currentTimeMillis() - (7 * 86400000);
+        long endOfWeek = System.currentTimeMillis();
+
         new Thread(() -> {
             try {
-                Date startTime = Date.from(Instant.now().minusSeconds(3600));  // 1 hour ago
-                Date endTime = Date.from(Instant.now());
-                float duration = 7.5f;
-                Timestamp date = new Timestamp(System.currentTimeMillis());
-                SleepPeriod mockSleepPeriod = new SleepPeriod(date, duration, new Timestamp(startTime.getTime()), new Timestamp(endTime.getTime()));
-                sleepPeriodDB.sleepPeriodDAO().addData(mockSleepPeriod);
-                Log.d("DataActivity", "Mock sleep data added successfully.");
+                List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodWeek(startOfWeek, endOfWeek);
+                for (SleepPeriod period : sleepPeriods) {
+                    Log.d("DataActivity", "Sleep Period: " + period.toString());
+                }
             } catch (Exception e) {
-                Log.e("DataActivity", "Error inserting mock sleep data", e);
+                Log.e("DataActivity", "Error retrieving sleep data", e);
             }
         }).start();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodData();
+            List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodWeek(startOfWeek, endOfWeek);
             runOnUiThread(() -> displayData(sleepPeriods));
         });
     }
+
 
     private void displayData(List<SleepPeriod> sleepPeriods) {
         float totalSleep = 0;
@@ -72,14 +73,13 @@ public class DataActivity extends AppCompatActivity {
         float avgWeekly = totalSleep / 7;
         float avgOverall = totalSleep / sleepCount;
 
-        // Update the text views with averages
         avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
         avgOverallText.setText("Average Overall: " + avgOverall + " hours");
 
         BarDataSet dataSet = new BarDataSet(barEntries, "Sleep Duration (Hours)");
         BarData barData = new BarData(dataSet);
         barChart.setData(barData);
-        barChart.invalidate();  // Refresh the chart
+        barChart.invalidate();
     }
 
 
