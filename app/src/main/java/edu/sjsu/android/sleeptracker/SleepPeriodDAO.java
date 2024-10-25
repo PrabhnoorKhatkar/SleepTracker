@@ -30,4 +30,9 @@ public interface SleepPeriodDAO
     @Query("SELECT * FROM SleepPeriod WHERE Date BETWEEN :startweek AND :endweek")
     List<SleepPeriod> getAllSleepPeriodWeek(long startweek, long endweek);
 
+    @Query("SELECT * FROM SleepPeriod WHERE Date BETWEEN :startMonth AND :endMonth")
+    List<SleepPeriod> getAllSleepPeriodMonth(long startMonth, long endMonth);
+
+
+
 }

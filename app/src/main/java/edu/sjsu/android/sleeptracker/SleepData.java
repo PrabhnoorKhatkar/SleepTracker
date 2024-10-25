@@ -23,9 +23,6 @@ public class SleepData {
     private int chargeState;
 
 
-    public SleepData() {
-    }
-
     public SleepData(Timestamp timestamp, float lux, int chargeState) {
         this.timestamp = timestamp;
         this.lux = lux;

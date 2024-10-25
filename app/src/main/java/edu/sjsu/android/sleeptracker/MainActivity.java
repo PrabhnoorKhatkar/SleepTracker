@@ -153,6 +153,5 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         }
-        sleepPeriodDB.closeDatabase();
     }
 }
