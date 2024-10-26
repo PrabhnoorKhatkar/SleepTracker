@@ -1,20 +1,17 @@
 package edu.sjsu.android.sleeptracker;
 
-import static java.lang.System.currentTimeMillis;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +26,9 @@ public class DataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
+
+        Button homeButton = findViewById(R.id.home_button);
+        homeButton.setOnClickListener(v -> navigateBackHome());
 
         barChart = findViewById(R.id.bar_chart_view);
         avgWeeklyText = findViewById(R.id.average_weekly);
@@ -56,6 +56,12 @@ public class DataActivity extends AppCompatActivity {
         });
     }
 
+    private void navigateBackHome() {
+        Intent intent = new Intent(DataActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 
     private void displayData(List<SleepPeriod> sleepPeriods) {
         float totalSleep = 0;
@@ -82,5 +88,15 @@ public class DataActivity extends AppCompatActivity {
         barChart.invalidate();
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Navigate back to the home screen
+                navigateBackHome();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
