@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, SensorForegroundService.class);
         startForegroundService(serviceIntent);
 
+        saveSleepData();
         initTimePicker();
 
         Button dataButton = findViewById(R.id.data_button);
@@ -52,15 +53,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTimePicker()
     {
-        saveSleepData();
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
+
+        // Debugging/Testing Only
+        new Thread(() -> {
+            try {
+                SleepPeriod addData = new SleepPeriod(new Timestamp(1729833006*1000L), 10, new Timestamp(1729833006*1000L), new Timestamp(1729872606*1000L));
+                sleepPeriodDB.sleepPeriodDAO().addData(addData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+        // TODO Remove when done
+
         TimePicker startTimePicker = findViewById(R.id.datePicker1);
         TimePicker endTimePicker = findViewById(R.id.datePicker2);
 
         new Thread(() -> {
             try {
-                long last24Hours = System.currentTimeMillis() - 86400000;
-                SleepPeriod mostRecentSleepPeriod = sleepPeriodDB.sleepPeriodDAO().getMostRecentSleepPeriod(last24Hours);
+                SleepPeriod mostRecentSleepPeriod = sleepPeriodDB.sleepPeriodDAO().getMostRecentSleepPeriod();
 
                 if (mostRecentSleepPeriod != null)
                 {
@@ -103,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }).start();
+
 
     }
 

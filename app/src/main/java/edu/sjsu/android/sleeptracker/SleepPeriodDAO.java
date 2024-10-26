@@ -24,15 +24,13 @@ public interface SleepPeriodDAO
     @Query("SELECT * FROM SleepPeriod")
     List<SleepPeriod> getAllSleepPeriodData();
 
-    @Query("SELECT * FROM SleepPeriod WHERE startTime >= :last24Hours ORDER BY startTime DESC LIMIT 1")
-    SleepPeriod getMostRecentSleepPeriod(long last24Hours);
+    @Query("SELECT * FROM SleepPeriod ORDER BY startTime DESC LIMIT 1")
+    SleepPeriod getMostRecentSleepPeriod();
 
     @Query("SELECT * FROM SleepPeriod WHERE Date BETWEEN :startweek AND :endweek")
     List<SleepPeriod> getAllSleepPeriodWeek(long startweek, long endweek);
 
     @Query("SELECT * FROM SleepPeriod WHERE Date BETWEEN :startMonth AND :endMonth")
     List<SleepPeriod> getAllSleepPeriodMonth(long startMonth, long endMonth);
-
-
 
 }

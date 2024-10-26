@@ -20,10 +20,8 @@ public abstract class SleepPeriodDatabase extends RoomDatabase {
             synchronized (SleepPeriodDatabase.class)
             {
                 if (INSTANCE == null) {
-                    //INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepPeriodDatabase.class, "SleepPeriodDB").build();
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepPeriodDatabase.class, "sleep_period_db")
-                            .fallbackToDestructiveMigration()
-                            .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SleepPeriodDatabase.class, "SleepPeriodDB").build();
+
                 }
             }
         }
