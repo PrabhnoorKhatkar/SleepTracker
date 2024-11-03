@@ -15,6 +15,9 @@ public interface SleepPeriodDAO
     @Insert
     public void addData(SleepPeriod data);
 
+    @Insert
+    public void addData(List<SleepPeriod> data);
+
     @Update
     public void updateData(SleepPeriod data);
 
