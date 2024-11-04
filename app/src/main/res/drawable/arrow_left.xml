@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape with rounded corners -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#6A4FA3" /> <!-- Purple background color -->
+            <corners android:radius="30dp" /> <!-- Rounded corners to match right arrow -->
+        </shape>
+    </item>
+    <!-- Left arrow with properly aligned extended line -->
+    <item android:gravity="center">
+        <vector
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M 30,12 L 4,12 M 12,4 L 4,12 L 12,20 Z"
+                android:strokeWidth="2"
+                android:strokeColor="#FFFFFF"/>
+        </vector>
+    </item>
+</layer-list>
