@@ -24,7 +24,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <com.github.mikephil.charting.charts.BarChart
+    <edu.sjsu.android.sleeptracker.BarChartView
         android:id="@+id/bar_chart_view"
         android:layout_width="0dp"
         android:layout_height="300dp"
