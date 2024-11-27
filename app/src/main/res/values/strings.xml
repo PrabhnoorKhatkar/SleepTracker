@@ -33,6 +33,7 @@
     <string name="previous_week_button">Button for Previous Week</string>
     <string name="next_week_button">Button for Next Week</string>
 
-
+    <!-- Dark Mode Toggle -->
+    <string name="toggle_dark_mode">Toggle Dark Mode</string>
 
 </resources>

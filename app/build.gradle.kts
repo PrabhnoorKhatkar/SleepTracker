@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.room.runtime.android)
     implementation(libs.room.runtime)
     implementation (libs.mpandroidchart)
+    implementation(libs.appcompat.v161)
+
 
     // Test dependencies
     testImplementation(libs.junit)

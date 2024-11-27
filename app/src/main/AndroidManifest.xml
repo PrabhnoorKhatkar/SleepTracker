@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Declare features and permissions -->
     <uses-feature
         android:name="android.hardware.sensor.light"
         android:required="true" />
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -18,25 +18,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepTracker"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".DataActivity"
-            android:exported="true" />
+    <!-- Main Activity -->
+    <activity
+        android:name=".MainActivity"
+        android:theme="@style/Theme.SleepTracker"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-        <service
-            android:name=".SensorForegroundService"
-            android:foregroundServiceType="shortService"
-            />
+    <!-- Data Activity -->
+    <activity
+        android:name=".DataActivity"
+        android:theme="@style/Theme.SleepTracker"
+        android:exported="true" />
 
-
+    <!-- Sensor Foreground Service -->
+    <service
+        android:name=".SensorForegroundService"
+        android:foregroundServiceType="shortService" />
     </application>
 
-</manifest>
+    </manifest>

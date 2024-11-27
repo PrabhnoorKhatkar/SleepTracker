@@ -1,7 +1,9 @@
 package edu.sjsu.android.sleeptracker;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
+import androidx.core.content.ContextCompat;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -15,10 +17,10 @@ public class BarChartView extends BarChart {
 
     public BarChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initChart();
+        initChart(context);
     }
 
-    private void initChart() {
+    private void initChart(Context context) {
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(getDayLabels()));
@@ -36,6 +38,8 @@ public class BarChartView extends BarChart {
         setDrawBarShadow(false);
         setPinchZoom(false);
         setDrawValueAboveBar(true);
+
+        setChartColors(context);
     }
 
     private List<String> getDayLabels() {
@@ -57,9 +61,44 @@ public class BarChartView extends BarChart {
         }
 
         BarDataSet dataSet = new BarDataSet(entries, "");
+        applyDataSetColors(dataSet);
         BarData barData = new BarData(dataSet);
+
         super.setData(barData);
         invalidate();
     }
 
+    private void setChartColors(Context context) {
+        boolean isDarkMode = (context.getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+        int axisTextColor = isDarkMode ?
+                ContextCompat.getColor(context, R.color.on_background_dark) :
+                ContextCompat.getColor(context, R.color.on_background_light);
+
+        int gridLineColor = isDarkMode ?
+                ContextCompat.getColor(context, R.color.grid_dark) :
+                ContextCompat.getColor(context, R.color.grid_light);
+
+        getXAxis().setTextColor(axisTextColor);
+        getXAxis().setGridColor(gridLineColor);
+
+        getAxisLeft().setTextColor(axisTextColor);
+        getAxisLeft().setGridColor(gridLineColor);
+
+        getAxisRight().setTextColor(axisTextColor);
+        getAxisRight().setGridColor(gridLineColor);
+    }
+
+    private void applyDataSetColors(BarDataSet dataSet) {
+        boolean isDarkMode = (getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+        int barColor = isDarkMode ?
+                ContextCompat.getColor(getContext(), R.color.primary_dark) :
+                ContextCompat.getColor(getContext(), R.color.primary_light);
+
+        dataSet.setColor(barColor);
+        dataSet.setValueTextColor(barColor);
+    }
 }

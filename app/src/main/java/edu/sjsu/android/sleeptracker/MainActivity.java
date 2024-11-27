@@ -5,20 +5,18 @@ import static edu.sjsu.android.sleeptracker.Converters.timestampToLong;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TimePicker;
-
 import java.util.Date;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.sql.Timestamp;
-
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeUtils.applyTheme(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -50,6 +49,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_toggle_theme) {
+            ThemeUtils.toggleDarkMode(this);
+            recreate(); // Recreate the activity to apply the theme
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void initTimePicker()
     {
