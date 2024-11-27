@@ -8,6 +8,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +49,50 @@ public class DataActivity extends AppCompatActivity {
 
         loadDataForCurrentWeek();
     }
+
+    private void addSampleData() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                // Open the sample data file from assets
+                InputStream inputStream = getAssets().open("sample_data.csv");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                List<SleepPeriod> sampleData = new ArrayList<>();
+
+                // Read each line from the file
+                while ((line = reader.readLine()) != null) {
+                    String[] fields = line.split(",");
+                    if (fields.length == 4) {
+                        long date = Long.parseLong(fields[0].trim());
+                        float duration = Float.parseFloat(fields[1].trim());
+                        long startTime = Long.parseLong(fields[2].trim());
+                        long endTime = Long.parseLong(fields[3].trim());
+
+                        // Create a new SleepPeriod object
+                        SleepPeriod sleepPeriod = new SleepPeriod(
+                                new Timestamp(date),
+                                duration,
+                                new Timestamp(startTime),
+                                new Timestamp(endTime)
+                        );
+
+                        sampleData.add(sleepPeriod);
+                    }
+                }
+
+                // Add sample data to the database
+                for (SleepPeriod sleepPeriod : sampleData) {
+                    sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
+                }
+
+                runOnUiThread(this::loadDataForCurrentWeek);
+            } catch (Exception e) {
+                Log.e("DataActivity", "Error adding sample data", e);
+            }
+        });
+    }
+
 
     private void updateWeekRange(long referenceTime) {
         Calendar calendar = Calendar.getInstance();
