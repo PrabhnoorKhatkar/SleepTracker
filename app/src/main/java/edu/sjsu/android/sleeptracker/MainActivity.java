@@ -3,6 +3,7 @@ package edu.sjsu.android.sleeptracker;
 import static edu.sjsu.android.sleeptracker.Converters.timestampToLong;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
     private SleepDatabase sleepDB;
     private SleepPeriodDatabase sleepPeriodDB;
+
+    private static final String PREFS_NAME = "TimePickerPref";
+    private static final String KEY_START_HOUR = "startHour";
+    private static final String KEY_START_MINUTE = "startMinute";
+    private static final String KEY_END_HOUR = "endHour";
+    private static final String KEY_END_MINUTE = "endMinute";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         TimePicker startTimePicker = findViewById(R.id.datePicker1);
         TimePicker endTimePicker = findViewById(R.id.datePicker2);
 
+
         new Thread(() -> {
             try {
                 SleepPeriod mostRecentSleepPeriod = sleepPeriodDB.sleepPeriodDAO().getMostRecentSleepPeriod();
@@ -263,5 +273,50 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        TimePicker startTimePicker = findViewById(R.id.datePicker1);
+        TimePicker endTimePicker = findViewById(R.id.datePicker2);
+
+        // Retrieve TimePicker values
+        int startHour = startTimePicker.getHour();
+        int startMinute = startTimePicker.getMinute();
+        int endHour = endTimePicker.getHour();
+        int endMinute = endTimePicker.getMinute();
+
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putInt(KEY_START_HOUR, startHour);
+        editor.putInt(KEY_START_MINUTE, startMinute);
+        editor.putInt(KEY_END_HOUR, endHour);
+        editor.putInt(KEY_END_MINUTE, endMinute);
+        editor.apply();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        TimePicker startTimePicker = findViewById(R.id.datePicker1);
+        TimePicker endTimePicker = findViewById(R.id.datePicker2);
+
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        // Set the saved hour and minute values
+        int startHour = preferences.getInt(KEY_START_HOUR, 0);
+        int startMinute = preferences.getInt(KEY_START_MINUTE, 0);
+        int endHour = preferences.getInt(KEY_END_HOUR, 0);
+        int endMinute = preferences.getInt(KEY_END_MINUTE, 0);
+
+        // Set the restored values to the TimePickers
+        startTimePicker.setHour(startHour);
+        startTimePicker.setMinute(startMinute);
+        endTimePicker.setHour(endHour);
+        endTimePicker.setMinute(endMinute);
+
+
     }
 }
