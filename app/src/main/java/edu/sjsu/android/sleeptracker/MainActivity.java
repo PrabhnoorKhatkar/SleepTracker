@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         saveSleepData();
         initTimePicker();
 
+        Button saveButton = findViewById(R.id.Save);
+        saveButton.setOnClickListener(v -> saveButton());
+
         Button dataButton = findViewById(R.id.data_button);
         dataButton.setOnClickListener(v -> {
             Intent dataIntent = new Intent(MainActivity.this, DataActivity.class);
@@ -49,6 +54,93 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void saveButton() {
+        TimePicker startTimePicker = findViewById(R.id.datePicker1);
+        TimePicker endTimePicker = findViewById(R.id.datePicker2);
+
+        // Use the morning/evening of to count for that sleep
+        // Retrieve TimePicker values
+        int startHour = startTimePicker.getHour();
+        int startMinute = startTimePicker.getMinute();
+        int endHour = endTimePicker.getHour();
+        int endMinute = endTimePicker.getMinute();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long startOfDayTimestamp = calendar.getTimeInMillis();
+
+        // Determine AM/PM for endTime
+        boolean endIsAM = endHour < 12;
+        // Determine AM/PM for startTime
+        boolean startIsAM = startHour < 12;
+
+        // Calculate the total duration of sleep
+        int sleepDurationHours = 0;
+        // TODO round up or down on sleep minutes
+        int sleepDurationMinutes = 0;
+
+        if (endIsAM) {
+            if (startIsAM) {
+                // Both start and end are in AM on same day
+                if (endHour > startHour && endMinute > startMinute) {
+                    sleepDurationHours = endHour - startHour;
+                    sleepDurationMinutes = endMinute - startMinute;
+
+                } else {
+                    // eg. 11 AM => 4 AM
+                    // Start in AM and sleep for more than 12 hours into next day AM
+                    sleepDurationHours = (24 - startHour) + endHour;
+                    sleepDurationMinutes = endMinute - startMinute;
+                }
+            } else {
+                // eg 11 pm => 8am
+                // Start is PM, End is AM (normal sleep)
+                sleepDurationHours = (24 - startHour) + endHour;
+                sleepDurationMinutes = endMinute - startMinute;
+            }
+        } else // end is PM
+        {
+            // eg 3 AM => 4 PM
+            if (startIsAM) {
+                // Start is AM
+                sleepDurationHours = endHour - startHour;
+                sleepDurationMinutes = endMinute - startMinute;
+            } else {
+                if (startHour > endHour) {
+                    // eg 11PM => 1 PM
+                    // Start is PM but sleep to next day PM
+                    sleepDurationHours = (24 - startHour) + endHour;
+                    sleepDurationMinutes = endMinute - startMinute;
+
+                } else {
+                    // eg 1PM => 4 PM
+                    // Start is PM but sleep to next day PM
+                    sleepDurationHours = endHour - startHour;
+                    sleepDurationMinutes = endMinute - startMinute;
+
+                }
+
+            }
+        }
+
+        // Create SleepPeriod and save to database
+        SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startOfDayTimestamp), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
+
+        new Thread(() -> {
+            try {
+                sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
+                onSuccess();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,8 +159,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initTimePicker()
-    {
+    private void initTimePicker() {
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
 
         TimePicker startTimePicker = findViewById(R.id.datePicker1);
@@ -78,8 +169,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 SleepPeriod mostRecentSleepPeriod = sleepPeriodDB.sleepPeriodDAO().getMostRecentSleepPeriod();
 
-                if (mostRecentSleepPeriod != null)
-                {
+                if (mostRecentSleepPeriod != null) {
                     // Extract start and end time
                     Timestamp startTime = mostRecentSleepPeriod.getStartTime();
                     Timestamp endTime = mostRecentSleepPeriod.getEndTime();
@@ -97,22 +187,18 @@ public class MainActivity extends AppCompatActivity {
 
 
                     new Thread(() -> {
-                        try
-                        {
+                        try {
                             // Set the time on the time pickers
                             startTimePicker.setHour(startHour);
                             startTimePicker.setMinute(startMinute);
                             endTimePicker.setHour(endHour);
                             endTimePicker.setMinute(endMinute);
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }).start();
 
-                }
-                else
-                {
+                } else {
                     Log.d("HI", "NO SLEEP DATA FOUND LAST 24 HOURS");
                 }
             } catch (Exception e) {
@@ -142,6 +228,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void onSuccess() {
+
+        Toast.makeText(this, "Successfully Added Data",
+                Toast.LENGTH_LONG).show();
+    }
+
 
     private void processSleepData(List<SleepData> sleepDataList) {
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
