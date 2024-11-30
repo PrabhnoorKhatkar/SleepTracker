@@ -21,20 +21,18 @@ import androidx.core.app.NotificationCompat;
 import java.sql.Timestamp;
 
 
-public class SensorForegroundService extends Service implements SensorEventListener
-{
+public class SensorForegroundService extends Service implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private BatteryManager batteryManager;
     private SleepDatabase sleepDB;
     private long lastLoggedTime = 0;
-    private final long  logInterval = 300000; // 5 Minutes = 300000 milliseconds
+    private final long logInterval = 300000; // 5 Minutes = 300000 milliseconds
 
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
         // Initialize SensorManager and light sensor
@@ -54,8 +52,7 @@ public class SensorForegroundService extends Service implements SensorEventListe
 
     }
 
-    private void createNotificationChannel()
-    {
+    private void createNotificationChannel() {
         NotificationChannel serviceChannel = new NotificationChannel(
                 "SensorForegroundServiceChannel",
                 "Sensor Foreground Service Channel",
@@ -68,7 +65,12 @@ public class SensorForegroundService extends Service implements SensorEventListe
 
     private Notification getNotification() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         return new NotificationCompat.Builder(this, "SensorForegroundServiceChannel")
                 .setContentTitle("Sleep Tracker Running")
@@ -86,10 +88,8 @@ public class SensorForegroundService extends Service implements SensorEventListe
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent)
-    {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT)
-        {
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
             float luxValue = sensorEvent.values[0];
 
             // Get the battery status
