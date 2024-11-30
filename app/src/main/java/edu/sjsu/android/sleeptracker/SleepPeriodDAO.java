@@ -3,6 +3,7 @@ package edu.sjsu.android.sleeptracker;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -13,11 +14,17 @@ public interface SleepPeriodDAO
     @Insert
     public void addData(SleepPeriod data);
 
+    @Update
+    public void updateData(SleepPeriod data);
+
     @Query("SELECT MAX(sleepDuration) FROM SleepPeriod")
     Float getMaxSleep();
 
     @Query("SELECT MIN(sleepDuration) FROM SleepPeriod")
     Float getMinSleep();
+
+    @Query("SELECT * FROM SleepPeriod WHERE Date = :date LIMIT 1")
+    SleepPeriod getSleepPeriodByDate(long date);
 
     @Query("SELECT * FROM SleepPeriod ORDER BY startTime DESC LIMIT 1")
     SleepPeriod getMostRecentSleepPeriod();

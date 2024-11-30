@@ -2,11 +2,15 @@ package edu.sjsu.android.sleeptracker;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.sql.Timestamp;
 
-@Entity(tableName = "SleepPeriod")
+@Entity(
+        tableName = "SleepPeriod",
+        indices = {@Index(value = {"Date"}, unique = true)}
+)
 public class SleepPeriod
 {
     @PrimaryKey(autoGenerate = true)

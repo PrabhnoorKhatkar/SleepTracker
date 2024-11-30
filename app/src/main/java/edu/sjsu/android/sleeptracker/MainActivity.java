@@ -138,11 +138,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Create SleepPeriod and save to database
         SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startOfDayTimestamp), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
-
         new Thread(() -> {
             try {
-                sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
-                onSuccess();
+                SleepPeriod existing = sleepPeriodDB.sleepPeriodDAO().getSleepPeriodByDate(sleepPeriod.getDate().getTime());
+                if (existing == null) {
+                    sleepPeriodDB.sleepPeriodDAO().addData(sleepPeriod);
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Sleep Period Added", Toast.LENGTH_SHORT).show()
+                    );
+                } else {
+                    sleepPeriodDB.sleepPeriodDAO().updateData(sleepPeriod);
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Sleep Period Updated", Toast.LENGTH_SHORT).show()
+                    );
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -238,13 +247,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    private void onSuccess() {
-
-        Toast.makeText(this, "Successfully Added Data",
-                Toast.LENGTH_LONG).show();
-    }
-
 
     private void processSleepData(List<SleepData> sleepDataList) {
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());

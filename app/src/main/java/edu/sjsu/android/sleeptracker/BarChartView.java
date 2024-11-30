@@ -65,13 +65,13 @@ public class BarChartView extends BarChart {
 
     private List<String> getDayLabels() {
         List<String> dayLabels = new ArrayList<>();
+        dayLabels.add("Sun");
         dayLabels.add("Mon");
         dayLabels.add("Tue");
         dayLabels.add("Wed");
         dayLabels.add("Thu");
         dayLabels.add("Fri");
         dayLabels.add("Sat");
-        dayLabels.add("Sun");
         return dayLabels;
     }
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,7 +29,7 @@ public class DataActivity extends AppCompatActivity {
     private static final String KEY_SAMPLE_DATA_ADDED = "sample_data_added";
     private SleepPeriodDatabase sleepPeriodDB;
     private BarChartView barChart;
-    private TextView avgWeeklyText, avgOverallText;
+    private TextView avgWeeklyText, avgOverallText, weekDisplayText;
 
 
     @Override
@@ -64,6 +65,7 @@ public class DataActivity extends AppCompatActivity {
         avgWeeklyText = findViewById(R.id.average_weekly);
         avgOverallText = findViewById(R.id.average_overall);
         Button addSampleDataButton = findViewById(R.id.add_sample_data_button);
+        weekDisplayText = findViewById(R.id.weekDisplay);
 
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
 
@@ -101,6 +103,7 @@ public class DataActivity extends AppCompatActivity {
 
                 // Hide the button after adding data
                 addSampleDataButton.setVisibility(View.GONE);
+                recreate();
             });
 
         }
@@ -187,7 +190,7 @@ public class DataActivity extends AppCompatActivity {
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         startOfWeek = calendar.getTimeInMillis();
 
-        calendar.add(Calendar.DAY_OF_WEEK, 6);
+        calendar.add(Calendar.DAY_OF_WEEK, 7);
         endOfWeek = calendar.getTimeInMillis();
     }
 
@@ -218,6 +221,7 @@ public class DataActivity extends AppCompatActivity {
             try {
                 List<SleepPeriod> sleepPeriods = sleepPeriodDB.sleepPeriodDAO().getAllSleepPeriodWeek(startOfWeek, endOfWeek);
                 runOnUiThread(() -> displayData(sleepPeriods));
+
             } catch (Exception e) {
                 Log.e("DataActivity", "Error retrieving sleep data", e);
             }
@@ -247,6 +251,10 @@ public class DataActivity extends AppCompatActivity {
 
         avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
         avgOverallText.setText("Average Overall: " + avgOverall + " hours");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
+        String weekRange = "Week of " + dateFormat.format(startOfWeek) + "-" + dateFormat.format(endOfWeek);
+        weekDisplayText.setText(weekRange);
+
 
         barChart.setData(durations);
     }
