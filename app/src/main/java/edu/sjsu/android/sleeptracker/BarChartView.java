@@ -15,12 +15,35 @@ import java.util.List;
 
 public class BarChartView extends BarChart {
 
+    private SleepPeriodDatabase sleepPeriodDB;
+
     public BarChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initChart(context);
     }
 
     private void initChart(Context context) {
+
+        new Thread(() -> {
+            try {
+
+                sleepPeriodDB = SleepPeriodDatabase.getInstance(context.getApplicationContext());
+
+                if(sleepPeriodDB.sleepPeriodDAO().getMinSleep() < 4){
+                    getAxisLeft().setAxisMinimum(0f);
+                }
+                else {
+                    getAxisLeft().setAxisMinimum(sleepPeriodDB.sleepPeriodDAO().getMinSleep() - 4);
+                }
+                getAxisLeft().setAxisMaximum(sleepPeriodDB.sleepPeriodDAO().getMaxSleep() + 4);
+
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }).start();
+
+
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(getDayLabels()));
@@ -29,8 +52,6 @@ public class BarChartView extends BarChart {
 
         getLegend().setEnabled(false);
 
-        getAxisLeft().setAxisMinimum(7f);
-        getAxisLeft().setAxisMaximum(12f);
         getAxisLeft().setGranularity(1f);
         getAxisRight().setEnabled(false);
 

@@ -70,41 +70,6 @@ public class MainActivity extends AppCompatActivity {
     private void initTimePicker()
     {
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
-        /*
-        // Debugging/Testing Only
-        new Thread(() -> {
-            try {
-                long[][] data = {
-                        {1729852206000L, 10, 1729914000000L, 1729950000000L},
-                        {1729938606000L, 9, 1729999200000L, 1730031600000L},
-                        {1730025006000L, 10, 1730085600000L, 1730121600000L},
-                        {1730111406000L, 11, 1730172000000L, 1730211600000L},
-                        {1730197806000L, 9, 1730258400000L, 1730290800000L},
-                        {1730284206000L, 8, 1730344800000L, 1730373600000L},
-                        {1730370606000L, 8, 1730431200000L, 1730460000000L},
-                        {1730457006000L, 8, 1730517600000L, 1730546400000L},
-                        {1730543406000L, 10, 1730604000000L, 1730640000000L},
-                        {1730629806000L, 9, 1730690400000L, 1730722800000L},
-                        {1730716206000L, 12, 1730776800000L, 1730820000000L},
-                        {1730802606000L, 9, 1730863200000L, 1730895600000L}
-                };
-
-                for (long[] entry : data) {
-                    SleepPeriod addData = new SleepPeriod(
-                            new Timestamp(entry[0]), // date
-                            (float) entry[1],          // duration
-                            new Timestamp(entry[2]), // starttime
-                            new Timestamp(entry[3])  // endtime
-                    );
-                    sleepPeriodDB.sleepPeriodDAO().addData(addData);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-         */
-        // TODO Remove when done
 
         TimePicker startTimePicker = findViewById(R.id.datePicker1);
         TimePicker endTimePicker = findViewById(R.id.datePicker2);

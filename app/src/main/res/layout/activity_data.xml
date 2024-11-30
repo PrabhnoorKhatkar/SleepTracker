@@ -131,7 +131,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="98dp"
-        android:text="Add Data"
+        android:text="Add Sample Data"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/average_container"
