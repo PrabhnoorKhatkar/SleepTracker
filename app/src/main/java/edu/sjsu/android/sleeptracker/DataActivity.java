@@ -1,8 +1,10 @@
 package edu.sjsu.android.sleeptracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -23,12 +25,36 @@ public class DataActivity extends AppCompatActivity {
 
     private long startOfWeek;
     private long endOfWeek;
+    private final String KEY_START_OF_WEEK = "start_of_week";
+    private final String KEY_END_OF_WEEK = "end_of_week";
     private SleepPeriodDatabase sleepPeriodDB;
     private BarChartView barChart;
     private TextView avgWeeklyText, avgOverallText;
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_toggle_theme) {
+            ThemeUtils.toggleDarkMode(this);
+            recreate(); // Recreate the activity to apply the theme
+            return true;
+        }
+        if (item.getItemId() == android.R.id.home) {
+            navigateBackHome();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeUtils.applyTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
 
@@ -40,6 +66,15 @@ public class DataActivity extends AppCompatActivity {
         avgOverallText = findViewById(R.id.average_overall);
 
         sleepPeriodDB = SleepPeriodDatabase.getInstance(getApplicationContext());
+
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        startOfWeek = preferences.getLong(KEY_START_OF_WEEK, 0);
+        endOfWeek = preferences.getLong(KEY_END_OF_WEEK, 0);
+
+        // If no values saved, init with the current week
+        if (startOfWeek == 0 || endOfWeek == 0) {
+            updateWeekRange(System.currentTimeMillis());
+        }
 
         updateWeekRange(System.currentTimeMillis());
 
@@ -70,12 +105,7 @@ public class DataActivity extends AppCompatActivity {
                         long endTime = Long.parseLong(fields[3].trim());
 
                         // Create a new SleepPeriod object
-                        SleepPeriod sleepPeriod = new SleepPeriod(
-                                new Timestamp(date),
-                                duration,
-                                new Timestamp(startTime),
-                                new Timestamp(endTime)
-                        );
+                        SleepPeriod sleepPeriod = new SleepPeriod( new Timestamp(date), duration, new Timestamp(startTime), new Timestamp(endTime));
 
                         sampleData.add(sleepPeriod);
                     }
@@ -93,6 +123,24 @@ public class DataActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Get saved week range from SharedPreferences
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        startOfWeek = preferences.getLong(KEY_START_OF_WEEK, 0);
+        endOfWeek = preferences.getLong(KEY_END_OF_WEEK, 0);
+
+        // If no values saved, init with the current week
+        if (startOfWeek == 0 || endOfWeek == 0) {
+            updateWeekRange(System.currentTimeMillis());
+        }
+
+        // Load data for the current week
+        loadDataForCurrentWeek();
+    }
+
 
     private void updateWeekRange(long referenceTime) {
         Calendar calendar = Calendar.getInstance();
@@ -108,13 +156,22 @@ public class DataActivity extends AppCompatActivity {
     private void showPreviousWeek() {
         startOfWeek -= 7 * 86400000L;
         endOfWeek -= 7 * 86400000L;
+        saveWeekRange();
         loadDataForCurrentWeek();
     }
 
     private void showNextWeek() {
         startOfWeek += 7 * 86400000L;
         endOfWeek += 7 * 86400000L;
+        saveWeekRange();
         loadDataForCurrentWeek();
+    }
+
+    private void saveWeekRange() {
+        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putLong(KEY_START_OF_WEEK, startOfWeek);
+        editor.putLong(KEY_END_OF_WEEK, endOfWeek);
+        editor.apply();
     }
 
     private void loadDataForCurrentWeek() {
@@ -157,11 +214,11 @@ public class DataActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            navigateBackHome();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putLong(KEY_START_OF_WEEK, startOfWeek);
+        editor.putLong(KEY_END_OF_WEEK, endOfWeek);
+        editor.apply();
     }
 }
