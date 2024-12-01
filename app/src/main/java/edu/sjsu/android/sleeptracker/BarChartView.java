@@ -57,19 +57,9 @@ public class BarChartView extends BarChart {
         setDrawValueAboveBar(true);
 
         setChartColors(context);
+        setDescription(null);
     }
 
-    private List<String> getDayLabels() {
-        List<String> dayLabels = new ArrayList<>();
-        dayLabels.add("Sun");
-        dayLabels.add("Mon");
-        dayLabels.add("Tue");
-        dayLabels.add("Wed");
-        dayLabels.add("Thu");
-        dayLabels.add("Fri");
-        dayLabels.add("Sat");
-        return dayLabels;
-    }
 
     public void setLabels(List<String> labels) {
         XAxis xAxis = getXAxis();

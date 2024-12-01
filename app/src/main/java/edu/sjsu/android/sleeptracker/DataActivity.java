@@ -250,11 +250,7 @@ public class DataActivity extends AppCompatActivity {
             totalSleep += duration;
             durations.add(duration);
 
-            labels.add(dateFormat1.format(period.getStartTime()));
-            // TODO label date is wrong
-            Log.d("DataActivity", dateFormat1.format(period.getStartTime()));
-
-
+            labels.add(dateFormat1.format(period.getDate()));
         }
 
         float avgWeekly = sleepCount > 0 ? totalSleep / 7 : 0;
