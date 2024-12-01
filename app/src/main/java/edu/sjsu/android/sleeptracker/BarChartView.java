@@ -44,11 +44,7 @@ public class BarChartView extends BarChart {
         }).start();
 
 
-        XAxis xAxis = getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(getDayLabels()));
-        xAxis.setGranularity(1f);
-        xAxis.setGranularityEnabled(true);
+
 
         getLegend().setEnabled(false);
 
@@ -73,6 +69,14 @@ public class BarChartView extends BarChart {
         dayLabels.add("Fri");
         dayLabels.add("Sat");
         return dayLabels;
+    }
+
+    public void setLabels(List<String> labels) {
+        XAxis xAxis = getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
     }
 
     public void setData(List<Float> data) {

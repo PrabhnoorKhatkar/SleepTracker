@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -239,11 +240,21 @@ public class DataActivity extends AppCompatActivity {
         float totalSleep = 0;
         int sleepCount = sleepPeriods.size();
         List<Float> durations = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE"); // Format day as abbreviated weekday
+        dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         for (SleepPeriod period : sleepPeriods) {
             float duration = period.getDuration();
             totalSleep += duration;
             durations.add(duration);
+
+            labels.add(dateFormat1.format(period.getStartTime()));
+            // TODO label date is wrong
+            Log.d("DataActivity", dateFormat1.format(period.getStartTime()));
+
+
         }
 
         float avgWeekly = sleepCount > 0 ? totalSleep / 7 : 0;
@@ -255,8 +266,9 @@ public class DataActivity extends AppCompatActivity {
         String weekRange = "Week of " + dateFormat.format(startOfWeek) + "-" + dateFormat.format(endOfWeek);
         weekDisplayText.setText(weekRange);
 
-
+        barChart.setLabels(labels);
         barChart.setData(durations);
+
     }
 
     @Override
