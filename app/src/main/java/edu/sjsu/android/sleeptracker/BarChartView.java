@@ -29,12 +29,7 @@ public class BarChartView extends BarChart {
 
                 sleepPeriodDB = SleepPeriodDatabase.getInstance(context.getApplicationContext());
 
-                if(sleepPeriodDB.sleepPeriodDAO().getMinSleep() < 4){
-                    getAxisLeft().setAxisMinimum(0f);
-                }
-                else {
-                    getAxisLeft().setAxisMinimum(sleepPeriodDB.sleepPeriodDAO().getMinSleep() - 4);
-                }
+                getAxisLeft().setAxisMinimum(0);
                 getAxisLeft().setAxisMaximum(sleepPeriodDB.sleepPeriodDAO().getMaxSleep() + 4);
 
             } catch (Exception e)
