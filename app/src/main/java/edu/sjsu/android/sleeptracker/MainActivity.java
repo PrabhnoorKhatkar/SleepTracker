@@ -208,10 +208,10 @@ public class MainActivity extends AppCompatActivity {
                     new Thread(() -> {
                         try {
                             // Set the time on the time pickers
-                            startTimePicker.setHour(startHour);
-                            startTimePicker.setMinute(startMinute);
-                            endTimePicker.setHour(endHour);
-                            endTimePicker.setMinute(endMinute);
+                            startTimePicker.setHour(endHour);
+                            startTimePicker.setMinute(endMinute);
+                            endTimePicker.setHour(startHour);
+                            endTimePicker.setMinute(startMinute);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
