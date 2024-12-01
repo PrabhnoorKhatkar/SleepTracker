@@ -3,7 +3,6 @@ package edu.sjsu.android.sleeptracker;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
 import java.sql.Timestamp;
 

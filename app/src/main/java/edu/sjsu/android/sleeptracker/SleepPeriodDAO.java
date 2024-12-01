@@ -12,10 +12,10 @@ public interface SleepPeriodDAO
 {
 
     @Insert
-    public void addData(SleepPeriod data);
+    void addData(SleepPeriod data);
 
     @Update
-    public void updateData(SleepPeriod data);
+    void updateData(SleepPeriod data);
 
     @Query("SELECT MAX(sleepDuration) FROM SleepPeriod")
     Float getMaxSleep();
