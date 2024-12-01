@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create SleepPeriod and save to database
         SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startOfDayTimestamp), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
+        int finalSleepDurationHours = sleepDurationHours;
         new Thread(() -> {
             try {
                 SleepPeriod existing = sleepPeriodDB.sleepPeriodDAO().getSleepPeriodByDate(sleepPeriod.getDate().getTime());
@@ -147,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(this, "Sleep Period Added", Toast.LENGTH_SHORT).show()
                     );
                 } else {
-                    sleepPeriodDB.sleepPeriodDAO().updateData(sleepPeriod);
+                    existing.setDuration(finalSleepDurationHours);
+                    sleepPeriodDB.sleepPeriodDAO().updateData(existing);
                     runOnUiThread(() ->
                             Toast.makeText(this, "Sleep Period Updated", Toast.LENGTH_SHORT).show()
                     );
