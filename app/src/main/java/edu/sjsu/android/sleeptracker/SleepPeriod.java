@@ -36,20 +36,8 @@ public class SleepPeriod
         this.endTime = endTime;
     }
 
-    public int getSleepID() {
-        return SleepID;
-    }
-
-    public void setSleepID(int sleepID) {
-        SleepID = sleepID;
-    }
-
     public Timestamp getDate() {
         return date;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
     }
 
     public float getDuration() {
@@ -64,15 +52,8 @@ public class SleepPeriod
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
     public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
 }

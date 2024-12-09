@@ -20,9 +20,6 @@ public interface SleepPeriodDAO
     @Query("SELECT MAX(sleepDuration) FROM SleepPeriod")
     Float getMaxSleep();
 
-    @Query("SELECT MIN(sleepDuration) FROM SleepPeriod")
-    Float getMinSleep();
-
     @Query("SELECT * FROM SleepPeriod WHERE Date = :date LIMIT 1")
     SleepPeriod getSleepPeriodByDate(long date);
 

@@ -136,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if(sleepDurationMinutes > 31)
+        {
+            sleepDurationHours++;
+        }
         // Create SleepPeriod and save to database
         SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startOfDayTimestamp), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
         int finalSleepDurationHours = sleepDurationHours;

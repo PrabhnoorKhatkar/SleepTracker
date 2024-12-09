@@ -28,9 +28,4 @@ public abstract class SleepPeriodDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    public void closeDatabase() {
-        if (INSTANCE != null && INSTANCE.isOpen()) {
-            INSTANCE.close();
-        }
-    }
 }

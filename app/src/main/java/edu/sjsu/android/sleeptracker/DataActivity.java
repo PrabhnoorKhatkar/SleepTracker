@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -242,7 +243,7 @@ public class DataActivity extends AppCompatActivity {
         List<Float> durations = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE"); // Format day as abbreviated weekday
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE", Locale.US); // Format day as abbreviated weekday
         dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         for (SleepPeriod period : sleepPeriods) {
@@ -258,7 +259,7 @@ public class DataActivity extends AppCompatActivity {
 
         avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
         avgOverallText.setText("Average Overall: " + avgOverall + " hours");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.US);
         String weekRange = "Week of " + dateFormat.format(startOfWeek) + "-" + dateFormat.format(endOfWeek);
         weekDisplayText.setText(weekRange);
 

@@ -21,44 +21,18 @@ public class SleepData {
     @ColumnInfo(name = "ChargeState")
     private int chargeState;
 
-
     public SleepData(Timestamp timestamp, float lux, int chargeState) {
         this.timestamp = timestamp;
         this.lux = lux;
         this.chargeState = chargeState;
     }
 
-    public int getEventID() {
-        return eventID;
-    }
-
-    public void setEventID(int eventID) {
-        this.eventID = eventID;
-    }
-
-
     public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public float getLux() {
         return lux;
-    }
-
-    public void setLux(float lux) {
-        this.lux = lux;
-    }
-
-    public int getChargeState() {
-        return chargeState;
-    }
-
-    public void setChargeState(int chargeState) {
-        this.chargeState = chargeState;
     }
 
     public boolean isCharging() {
