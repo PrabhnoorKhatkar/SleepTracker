@@ -68,80 +68,41 @@ public class MainActivity extends AppCompatActivity {
         TimePicker startTimePicker = findViewById(R.id.datePicker1);
         TimePicker endTimePicker = findViewById(R.id.datePicker2);
 
-        // Use the morning/evening of to count for that sleep
         // Retrieve TimePicker values
         int startHour = startTimePicker.getHour();
         int startMinute = startTimePicker.getMinute();
         int endHour = endTimePicker.getHour();
         int endMinute = endTimePicker.getMinute();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        long startOfDayTimestamp = calendar.getTimeInMillis();
+        // Set calendar instances for precise calculations
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.set(Calendar.HOUR_OF_DAY, startHour);
+        startCalendar.set(Calendar.MINUTE, startMinute);
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
 
-        // Determine AM/PM for endTime
-        boolean endIsAM = endHour < 12;
-        // Determine AM/PM for startTime
-        boolean startIsAM = startHour < 12;
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.set(Calendar.HOUR_OF_DAY, endHour);
+        endCalendar.set(Calendar.MINUTE, endMinute);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
 
-        // Calculate the total duration of sleep
-        int sleepDurationHours = 0;
-        // TODO round up or down on sleep minutes
-        int sleepDurationMinutes = 0;
-
-        if (endIsAM) {
-            if (startIsAM) {
-                // Both start and end are in AM on same day
-                if (endHour > startHour && endMinute > startMinute) {
-                    sleepDurationHours = endHour - startHour;
-                    sleepDurationMinutes = endMinute - startMinute;
-
-                } else {
-                    // eg. 11 AM => 4 AM
-                    // Start in AM and sleep for more than 12 hours into next day AM
-                    sleepDurationHours = (24 - startHour) + endHour;
-                    sleepDurationMinutes = endMinute - startMinute;
-                }
-            } else {
-                // eg 11 pm => 8am
-                // Start is PM, End is AM (normal sleep)
-                sleepDurationHours = (24 - startHour) + endHour;
-                sleepDurationMinutes = endMinute - startMinute;
-            }
-        } else // end is PM
-        {
-            // eg 3 AM => 4 PM
-            if (startIsAM) {
-                // Start is AM
-                sleepDurationHours = endHour - startHour;
-                sleepDurationMinutes = endMinute - startMinute;
-            } else {
-                if (startHour > endHour) {
-                    // eg 11PM => 1 PM
-                    // Start is PM but sleep to next day PM
-                    sleepDurationHours = (24 - startHour) + endHour;
-                    sleepDurationMinutes = endMinute - startMinute;
-
-                } else {
-                    // eg 1PM => 4 PM
-                    // Start is PM but sleep to next day PM
-                    sleepDurationHours = endHour - startHour;
-                    sleepDurationMinutes = endMinute - startMinute;
-
-                }
-
-            }
+        // Handle cross-day scenarios
+        if (endCalendar.getTimeInMillis() <= startCalendar.getTimeInMillis()) {
+            endCalendar.add(Calendar.DATE, 1); // End time is on the next day
         }
+
+        long durationInMillis = endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis();
+        int sleepDurationHours = (int) (durationInMillis / (1000 * 60 * 60));
+        int sleepDurationMinutes = (int) ((durationInMillis % (1000 * 60 * 60)) / (1000 * 60));
+
 
         if(sleepDurationMinutes > 31)
         {
             sleepDurationHours++;
         }
         // Create SleepPeriod and save to database
-        SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startOfDayTimestamp), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
+        SleepPeriod sleepPeriod = new SleepPeriod(new Timestamp(startCalendar.getTimeInMillis()), sleepDurationHours, new Timestamp(0L), new Timestamp(0L));
         int finalSleepDurationHours = sleepDurationHours;
         new Thread(() -> {
             try {
