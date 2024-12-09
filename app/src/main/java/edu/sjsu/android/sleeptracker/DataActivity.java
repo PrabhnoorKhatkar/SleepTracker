@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -48,12 +49,19 @@ public class DataActivity extends AppCompatActivity {
             recreate(); // Recreate the activity to apply the theme
             return true;
         }
-        if (item.getItemId() == android.R.id.home) {
-            navigateBackHome();
+        if (item.getItemId() == R.id.action_uninstall) {
+            uninstallApp();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void uninstallApp() {
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

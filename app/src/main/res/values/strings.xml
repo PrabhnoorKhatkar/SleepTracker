@@ -38,4 +38,7 @@
     <string name="average_weekly_1f_hours">Average Weekly: %.1f hours</string>
     <string name="average_overall_1f_hours">Average Overall: %.1f hours</string>
 
+    <!-- Uninstall option -->
+    <string name="uninstall_app">Uninstall App</string>
+
 </resources>

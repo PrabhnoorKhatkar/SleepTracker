@@ -4,6 +4,7 @@ import static edu.sjsu.android.sleeptracker.Converters.timestampToLong;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -140,7 +141,17 @@ public class MainActivity extends AppCompatActivity {
             recreate(); // Recreate the activity to apply the theme
             return true;
         }
+        if (item.getItemId() == R.id.action_uninstall) {
+            uninstallApp();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void uninstallApp() {
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
     }
 
 

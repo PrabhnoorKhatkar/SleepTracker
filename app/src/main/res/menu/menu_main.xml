@@ -5,4 +5,9 @@
         android:id="@+id/action_toggle_theme"
         android:title="@string/toggle_dark_mode"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_uninstall"
+        android:title="@string/uninstall_app"
+        app:showAsAction="never" />
 </menu>
