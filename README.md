@@ -1,12 +1,9 @@
-SleepTracker: Android App
-By Prabhnoor Khatkar and Rimon Yacoub
+## Welcome to our Android App SleepTracker
 
-Welcome to our Android App SleepTracker
-
-Overview
+## 📋 Overview
 We help users track, monitor, and visualize their nightly sleeps. To promote and bring awareness to an important aspect of their lives. 
 
-Features
+## 🌟 Features
 
 Automatic Sleep Detection:
 * Sleep periods are calculated using your device's light sensor and charging status to detect inactivity. Data is collected every 5 minutes and processed to estimate sleep intervals.
@@ -23,7 +20,7 @@ Dark Mode:
 Sample Data:
 * Sample sleep data is included for first-time users, allowing them to explore the app's functionality and determine if it suits their needs.
 
-How It Works
+## 🔍 How It Works
 
 Automatic Tracking:
 * The app collects sensor data (e.g., light levels and charging status) every 5 minutes to detect periods of inactivity.
@@ -40,7 +37,10 @@ Sleep Trends Visualization:
 * Navigate weekly summaries to monitor progress over time.
 
 
-
 Our APK, App Backlog, and Report can be accessed with the following link below:
 
 https://drive.google.com/drive/folders/1yq858b1ObIkGDnC3fDI5gQ3mIrmy87bA?usp=sharing
+
+
+## SleepTracker: Android App
+By Prabhnoor Khatkar and Rimon Yacoub
