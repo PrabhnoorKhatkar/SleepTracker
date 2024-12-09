@@ -203,12 +203,18 @@ public class MainActivity extends AppCompatActivity {
                     Date startDate = new Date(startTime.getTime());
                     Date endDate = new Date(endTime.getTime());
 
-                    // Extract hours and minutes from Date
-                    int startHour = startDate.getHours();
-                    int startMinute = startDate.getMinutes();
+                    // Extract hours and minutes from Calender
+                    Calendar startCalendar = Calendar.getInstance();
+                    startCalendar.setTime(startDate);
 
-                    int endHour = endDate.getHours();
-                    int endMinute = endDate.getMinutes();
+                    Calendar endCalendar = Calendar.getInstance();
+                    endCalendar.setTime(endDate);
+
+                    int startHour = startCalendar.get(Calendar.HOUR_OF_DAY);
+                    int startMinute = startCalendar.get(Calendar.MINUTE);
+
+                    int endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
+                    int endMinute = endCalendar.get(Calendar.MINUTE);
 
 
                     new Thread(() -> {

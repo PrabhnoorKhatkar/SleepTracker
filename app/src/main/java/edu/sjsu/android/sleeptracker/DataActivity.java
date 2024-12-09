@@ -1,5 +1,7 @@
 package edu.sjsu.android.sleeptracker;
 
+import static java.lang.String.format;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -257,8 +259,8 @@ public class DataActivity extends AppCompatActivity {
         float avgWeekly = sleepCount > 0 ? totalSleep / 7 : 0;
         float avgOverall = sleepCount > 0 ? totalSleep / sleepCount : 0;
 
-        avgWeeklyText.setText("Average Weekly: " + avgWeekly + " hours");
-        avgOverallText.setText("Average Overall: " + avgOverall + " hours");
+        avgWeeklyText.setText(format(getString(R.string.average_weekly_1f_hours), avgWeekly));
+        avgOverallText.setText(format(getString(R.string.average_overall_1f_hours), avgOverall));
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.US);
         String weekRange = "Week of " + dateFormat.format(startOfWeek) + "-" + dateFormat.format(endOfWeek);
         weekDisplayText.setText(weekRange);

@@ -35,5 +35,7 @@
 
     <!-- Dark Mode Toggle -->
     <string name="toggle_dark_mode">Toggle Dark Mode</string>
+    <string name="average_weekly_1f_hours">Average Weekly: %.1f hours</string>
+    <string name="average_overall_1f_hours">Average Overall: %.1f hours</string>
 
 </resources>
