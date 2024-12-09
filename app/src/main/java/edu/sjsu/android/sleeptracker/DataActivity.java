@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -257,7 +256,6 @@ public class DataActivity extends AppCompatActivity {
         List<String> labels = new ArrayList<>();
 
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE", Locale.US);
-        dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         for (SleepPeriod period : sleepPeriods) {
             float duration = period.getDuration();
