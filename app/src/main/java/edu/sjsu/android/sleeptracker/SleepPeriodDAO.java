@@ -8,14 +8,19 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface SleepPeriodDAO
-{
+public interface SleepPeriodDAO {
 
     @Insert
     void addData(SleepPeriod data);
 
     @Update
     void updateData(SleepPeriod data);
+
+    @Query("SELECT SUM(sleepDuration) FROM SleepPeriod")
+    Float getTotalSleep();
+
+    @Query("SELECT COUNT(DISTINCT strftime('%Y-%m-%d', Date / 1000, 'unixepoch')) FROM SleepPeriod")
+    int getTotalDaysWithData();
 
     @Query("SELECT MAX(sleepDuration) FROM SleepPeriod")
     Float getMaxSleep();
@@ -28,6 +33,4 @@ public interface SleepPeriodDAO
 
     @Query("SELECT * FROM SleepPeriod WHERE Date BETWEEN :startweek AND :endweek")
     List<SleepPeriod> getAllSleepPeriodWeek(long startweek, long endweek);
-
-
 }

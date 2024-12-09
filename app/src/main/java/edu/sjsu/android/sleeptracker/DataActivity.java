@@ -245,29 +245,43 @@ public class DataActivity extends AppCompatActivity {
         List<Float> durations = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE", Locale.US); // Format day as abbreviated weekday
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("EEE", Locale.US);
         dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         for (SleepPeriod period : sleepPeriods) {
             float duration = period.getDuration();
             totalSleep += duration;
             durations.add(duration);
-
             labels.add(dateFormat1.format(period.getDate()));
         }
 
-        float avgWeekly = sleepCount > 0 ? totalSleep / 7 : 0;
-        float avgOverall = sleepCount > 0 ? totalSleep / sleepCount : 0;
+        float avgWeekly = sleepCount > 0 ? totalSleep / sleepCount : 0;
 
-        avgWeeklyText.setText(format(getString(R.string.average_weekly_1f_hours), avgWeekly));
-        avgOverallText.setText(format(getString(R.string.average_overall_1f_hours), avgOverall));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                Float totalSleepOverall = sleepPeriodDB.sleepPeriodDAO().getTotalSleep();
+                int totalDaysWithData = sleepPeriodDB.sleepPeriodDAO().getTotalDaysWithData();
+
+                float avgOverall = (totalSleepOverall != null && totalDaysWithData > 0)
+                        ? totalSleepOverall / totalDaysWithData
+                        : 0.0f;
+
+                runOnUiThread(() -> {
+                    avgWeeklyText.setText(format(getString(R.string.average_weekly_1f_hours), avgWeekly));
+                    avgOverallText.setText(format(getString(R.string.average_overall_1f_hours), avgOverall));
+                });
+            } catch (Exception e) {
+                Log.e("DataActivity", "Error fetching data from the database", e);
+            }
+        });
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.US);
-        String weekRange = "Week of " + dateFormat.format(startOfWeek) + "-" + dateFormat.format(endOfWeek);
+        String weekRange = "Week of " + dateFormat.format(startOfWeek) + " - " + dateFormat.format(endOfWeek);
         weekDisplayText.setText(weekRange);
 
         barChart.setLabels(labels);
         barChart.setData(durations);
-
     }
 
     @Override
