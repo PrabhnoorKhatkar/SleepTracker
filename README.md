@@ -1,5 +1,9 @@
 ## Welcome to our Android App SleepTracker
 
+Our APK, App Backlog, and Report can be accessed with the following link below:
+
+https://drive.google.com/drive/folders/1yq858b1ObIkGDnC3fDI5gQ3mIrmy87bA?usp=sharing
+
 ## 📋 Overview
 We help users track, monitor, and visualize their nightly sleeps. To promote and bring awareness to an important aspect of their lives. 
 
@@ -35,11 +39,6 @@ Sleep Trends Visualization:
 
 * View sleep duration trends through intuitive bar charts.
 * Navigate weekly summaries to monitor progress over time.
-
-
-Our APK, App Backlog, and Report can be accessed with the following link below:
-
-https://drive.google.com/drive/folders/1yq858b1ObIkGDnC3fDI5gQ3mIrmy87bA?usp=sharing
 
 
 ## SleepTracker: Android App
