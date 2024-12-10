@@ -110,5 +110,6 @@ public class BarChartView extends BarChart {
 
         dataSet.setColor(barColor);
         dataSet.setValueTextColor(barColor);
+        dataSet.setValueTextSize(16f);
     }
 }
