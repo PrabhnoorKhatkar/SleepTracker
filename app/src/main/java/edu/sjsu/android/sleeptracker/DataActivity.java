@@ -53,6 +53,16 @@ public class DataActivity extends AppCompatActivity {
             uninstallApp();
             return true;
         }
+        if (item.getItemId() == R.id.remove_sample) {
+            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+            // Save the flag to SharedPreferences
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(KEY_SAMPLE_DATA_ADDED, true);
+            editor.apply();
+            recreate();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

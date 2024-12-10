@@ -40,5 +40,6 @@
 
     <!-- Uninstall option -->
     <string name="uninstall_app">Uninstall App</string>
+    <string name="remove_sample_button">Remove Sample Button</string>
 
 </resources>

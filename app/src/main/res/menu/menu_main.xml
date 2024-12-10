@@ -10,4 +10,9 @@
         android:id="@+id/action_uninstall"
         android:title="@string/uninstall_app"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/remove_sample"
+        android:title="@string/remove_sample_button"
+        app:showAsAction="never" />
 </menu>
